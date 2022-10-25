@@ -66,11 +66,10 @@ class AccountController extends Controller
 
 
        $matchThese = ['email' => $request->email];
-       $found=Account::where($matchThese)->first();
-       return  response()->json(["success"=>"true"]);
+       $found_with_email=Account::where($matchThese)->first();
 
 
-       if($found){
+       if($found_with_email){
            return response()->json(['success'=>false, 'message' => 'Email Exists'],422);
 
        }
@@ -131,11 +130,11 @@ class AccountController extends Controller
        
         $input = $request->only('email', 'password',);
         $validator = Validator::make($input, [
-            'email' => 'required|email|unique:users',
+            'email' => 'required',
             'password' => 'required|min:8'
         ]);
         if($validator->fails()){
-            return response()->json(["error"=>'email or password or identity_id fails'],422);
+            return response()->json(["error"=>'email or password fails'],422);
     
         }
         $matchThese = ['email' => $request->email];
