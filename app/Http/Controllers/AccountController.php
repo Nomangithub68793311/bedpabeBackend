@@ -79,18 +79,13 @@ class AccountController extends Controller
     //    $input['password'] =$ranpass;
 
        $input['hashedPassword'] = Hash::make($input['password']); 
-       return  response()->json(["success"=>$input['hashedPassword']]);
 
        try {
            DB::beginTransaction();
-           
-           
-           $user = Account::create($input); // eloquent creation of data
-           
-           
+           $user =Account::create($input); // eloquent creation of data
            if (!$user) {
                return response()->json(["error"=>"didnt work"],422);
-           } 
+           }
            // $response = Http::post('http://127.0.0.1:8000/v1/event', [
            //     "email"=>$student->email
                
@@ -99,12 +94,12 @@ class AccountController extends Controller
         //    $job=(new StudentEmailJob( $student->email,$student->password, $school->institution_name,$school->logo,))
         //    ->delay(Carbon::now()->addSeconds(5));
         //    dispatch( $job);
-           return  response()->json(["success"=>"true"]);
+           DB::commit();  
+        return  response()->json(["success"=>"true"]);
        }
-           catch (\Exception $e) {
-           DB::rollback();   
-            
-       return response()->json(["error"=>"no process error!"],422);
+       catch (\Exception $e) {
+           DB::rollback();
+           return response()->json(["error"=>"no process error!"],422);
    }
      
     }
