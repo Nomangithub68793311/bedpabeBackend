@@ -62,10 +62,13 @@ class AccountController extends Controller
            return response()->json(["error"=>'fails']);
 
        }
-       
+      
+
+
        $matchThese = ['email' => $request->email];
-     
        $found=Account::where($matchThese)->first();
+       return  response()->json(["success"=>"true"]);
+
 
        if($found){
            return response()->json(['success'=>false, 'message' => 'Email Exists'],422);
@@ -75,6 +78,7 @@ class AccountController extends Controller
 
     //    $ranpass=Str::random(12);
     //    $input['password'] =$ranpass;
+
        $input['hashedPassword'] = Hash::make($input['password']); 
        try {
            DB::beginTransaction();

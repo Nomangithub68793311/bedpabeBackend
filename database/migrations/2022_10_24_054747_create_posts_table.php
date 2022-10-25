@@ -14,7 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();           
+            $table->string('country');
+            $table->string('state');
+            $table->string('city');
+            $table->integer('service');
+            $table->string('category');
+            $table->string('title');
+            $table->string('description');
+            $table->integer('email');
+            $table->string('phone');
+            $table->string('approved')->nullable(); 
+            $table->integer('age');
             $table->timestamps();
         });
     }

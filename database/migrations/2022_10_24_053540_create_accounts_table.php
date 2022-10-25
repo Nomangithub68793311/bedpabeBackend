@@ -14,18 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('accounts', function (Blueprint $table) {
-            $table->uuid('id')->primary();           
-            $table->string('country');
-            $table->string('state');
-            $table->string('city');
-            $table->integer('service');
-            $table->string('category');
-            $table->string('title');
-            $table->string('description');
-            $table->integer('email');
-            $table->string('phone');
-            $table->string('approved')->nullable(); 
-            $table->integer('age');
+            
+
+            $table->uuid('id')->primary();
+            $table->string('name');
+            $table->string('email');
+            $table->string('password');
             $table->timestamps();
         });
     }
