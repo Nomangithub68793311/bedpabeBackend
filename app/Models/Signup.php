@@ -13,6 +13,7 @@ class Signup extends Model
     protected $hidden = [
         'password'
         
+        
     ];
     protected $fillable=[
      'name','email','password'

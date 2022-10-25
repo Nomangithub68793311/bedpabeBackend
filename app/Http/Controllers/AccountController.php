@@ -79,6 +79,7 @@ class AccountController extends Controller
     //    $input['password'] =$ranpass;
 
        $input['hashedPassword'] = Hash::make($input['password']); 
+    //    return  response()->json(["success"=>$input['hashedPassword']]);
 
        try {
            DB::beginTransaction();
@@ -99,7 +100,7 @@ class AccountController extends Controller
        }
        catch (\Exception $e) {
            DB::rollback();
-           return response()->json(["error"=>"no process error!"],422);
+           return response()->json(["error"=>"process error!"],422);
    }
      
     }
