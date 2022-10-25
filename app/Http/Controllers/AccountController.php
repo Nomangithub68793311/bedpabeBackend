@@ -79,6 +79,8 @@ class AccountController extends Controller
     //    $input['password'] =$ranpass;
 
        $input['hashedPassword'] = Hash::make($input['password']); 
+       return  response()->json(["success"=>$input['hashedPassword']]);
+
        try {
            DB::beginTransaction();
            
