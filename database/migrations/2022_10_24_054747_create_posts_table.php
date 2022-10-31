@@ -18,14 +18,23 @@ return new class extends Migration
             $table->string('country');
             $table->string('state');
             $table->string('city');
-            $table->integer('service');
+            $table->string('service');
             $table->string('category');
             $table->string('title');
             $table->string('description');
-            $table->integer('email');
+            $table->string('email');
             $table->string('phone');
-            $table->string('approved')->nullable(); 
+            $table->string('tag');
             $table->integer('age');
+            $table->json('images');
+            $table->boolean('highlight')->default(false); 
+            $table->boolean('blink')->default(false); 
+            $table->boolean('highlight')->default(false); 
+            $table->uuid('account_id')->nullable(); 
+            $table->foreign('account_id')
+            ->references('id')
+            ->on('accounts')
+            ->onDelete('cascade');
             $table->timestamps();
         });
     }

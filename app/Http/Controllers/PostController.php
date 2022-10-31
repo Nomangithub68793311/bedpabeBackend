@@ -2,8 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\JWTManager as JWT;
+use JWTAuth;
+use JWTFactory;
 
 class PostController extends Controller
 {
@@ -12,9 +23,11 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function allPost()
     {
-        //
+        $id="de191b40-f46e-450c-b5a2-20926c9b4ae0";
+        $post = Post::find($id);
+        return  response()->json(["success"=>$post->images]);
     }
 
     /**
@@ -24,7 +37,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+      
+
     }
 
     /**
@@ -33,24 +47,226 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeFree(Request $request,$id)
     {
+
+        // return  response()->json(["success"=> $request->file('file')]);
+
         $input = $request->only(
-            'country','state','city','service',
+            'country','state','city','service','tag',
             'category','title','description','email',
-            'phone','age','file'
-      );
-      $file = $input['file'];
-
-      // Build the input for validation
-      $fileArray = array('image' => $file);
+            'phone','age','images'
+            
+      );   
   
-      // Tell the validator that this file should be an image
-      $rules = array(
-        'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000' // max 10000kb
-      );
-    }
+        // return  response()->json(["success"=> $request->file('file')]);
 
+    
+
+      $validator = Validator::make($input, [
+        'country' => 'required',
+        'state' => 'required',
+        'city' => 'required',
+        'service' => 'required',
+        'category' => 'required',
+        'title' => 'required',
+        'description' => 'required',
+        'email' => 'required',
+        'phone' => 'required',
+        'age' => 'required',
+        'images' => 'required',
+        'tag' => 'required',
+
+
+        
+    ]);
+
+    if($validator->fails()){
+        return response()->json(["error"=>'fails']);
+
+    }
+    
+    $input['images']  = $request->file('file')->store('products');
+
+
+        try {
+            DB::beginTransaction();
+        
+
+            $account=Account::find($id);
+            
+            $post = Post::create($input); // eloquent creation of data
+            $account->posts()->save($post);
+            $post->save();
+            
+            if (!$post) {
+                return response()->json(["error"=>"didnt work"],422);
+            } 
+            // $response = Http::post('http://127.0.0.1:8000/v1/event', [
+            //     "email"=>$student->email
+                
+            // ]);
+            DB::commit();   
+            // $job=(new StudentEmailJob( $student->email,$student->password, $school->institution_name,$school->logo,))
+            // ->delay(Carbon::now()->addSeconds(5));
+            // dispatch( $job);
+            return  response()->json(["success"=>"true"]);
+        }
+            catch (\Exception $e) {
+            DB::rollback();  
+
+            }
+    
+
+    }
+    public function storeAd(Request $request ,$id)
+    {
+
+        // return  response()->json(["success"=> $request->file('file')]);
+
+        $input = $request->only(
+            'country','state','city','service','tag',
+            'category','title','description','email',
+            'phone','age','images'
+            
+      );   
+  
+        // return  response()->json(["success"=> $request->file('file')]);
+
+    
+
+      $validator = Validator::make($input, [
+        'country' => 'required',
+        'state' => 'required',
+        'city' => 'required',
+        'service' => 'required',
+        'category' => 'required',
+        'title' => 'required',
+        'description' => 'required',
+        'email' => 'required',
+        'phone' => 'required',
+        'age' => 'required',
+        'images' => 'required',
+        'tag' => 'required',
+
+        
+    ]);
+
+    if($validator->fails()){
+        return response()->json(["error"=>'fails']);
+
+    }
+    
+    $input['images']  = $request->file('file')->store('products');
+
+
+        try {
+            DB::beginTransaction();
+            $account=Account::find($id);
+            
+            $post = Post::create($input); // eloquent creation of data
+            $account->posts()->save($post);
+            $post->save();
+            
+            if (!$post) {
+                return response()->json(["error"=>"didnt work"],422);
+            } 
+            // $response = Http::post('http://127.0.0.1:8000/v1/event', [
+            //     "email"=>$student->email
+                
+            // ]);
+            if($request->totalBill)
+            {
+            $account->credit=$account->credit-$request->totalBill ;
+            $account->save();
+             }
+            DB::commit();   
+            // $job=(new StudentEmailJob( $student->email,$student->password, $school->institution_name,$school->logo,))
+            // ->delay(Carbon::now()->addSeconds(5));
+            // dispatch( $job);
+            return  response()->json(["success"=>"true"]);
+        }
+            catch (\Exception $e) {
+            DB::rollback();  
+
+            }
+    
+
+    }
+    public function storeMultiple(Request $request ,$id)
+    {
+
+        // return  response()->json(["success"=> $request->file('file')]);
+
+        $input = $request->only(
+            'country','state','city','service','tag',
+            'category','title','description','email',
+            'phone','age','images'
+            
+      );   
+  
+        // return  response()->json(["success"=> $request->file('file')]);
+
+    
+
+      $validator = Validator::make($input, [
+        'country' => 'required',
+        'state' => 'required',
+        'city' => 'required',
+        'service' => 'required',
+        'category' => 'required',
+        'title' => 'required',
+        'description' => 'required',
+        'email' => 'required',
+        'phone' => 'required',
+        'age' => 'required',
+        'images' => 'required',
+        'tag' => 'required',
+
+        
+    ]);
+
+    if($validator->fails()){
+        return response()->json(["error"=>'fails']);
+
+    }
+    
+    $input['images']  = $request->file('file')->store('products');
+
+
+        try {
+            DB::beginTransaction();
+            $school=Post::find($id);
+            
+            $student = Student::create($input); // eloquent creation of data
+            $school->student()->save($student);
+            $student->save();
+            
+            if (!$student) {
+                return response()->json(["error"=>"didnt work"],422);
+            } 
+            // $response = Http::post('http://127.0.0.1:8000/v1/event', [
+            //     "email"=>$student->email
+                
+            // ]);
+            if($request->totalBill)
+            {
+            $account->credit=$account->credit-$request->totalBill ;
+            $account->save();
+             }
+            DB::commit();   
+            // $job=(new StudentEmailJob( $student->email,$student->password, $school->institution_name,$school->logo,))
+            // ->delay(Carbon::now()->addSeconds(5));
+            // dispatch( $job);
+            return  response()->json(["success"=>"true"]);
+        }
+            catch (\Exception $e) {
+            DB::rollback();  
+
+            }
+    
+
+    }
     /**
      * Display the s pecified resource.
      *

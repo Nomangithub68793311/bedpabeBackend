@@ -18,5 +18,9 @@ class Account extends Model
     protected $fillable=[
      'name','email','password','hashedPassword'
     ];
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 
 }

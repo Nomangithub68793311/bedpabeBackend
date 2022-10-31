@@ -14,6 +14,13 @@ class Post extends Model
     protected $fillable=[
         'country','state','city','service',
         'category','title','description','email',
-        'phone','age'
+        'phone','age','images'
     ];
+    protected $casts = [
+        'images' => 'array'
+    ];
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 }
