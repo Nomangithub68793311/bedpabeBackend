@@ -29,7 +29,6 @@ return new class extends Migration
             $table->json('images');
             $table->boolean('highlight')->default(false); 
             $table->boolean('blink')->default(false); 
-            $table->boolean('highlight')->default(false); 
             $table->uuid('account_id')->nullable(); 
             $table->foreign('account_id')
             ->references('id')

@@ -8,5 +8,5 @@ Route::post('/post/add/free/{id}', [PostController::class,'storeFree'])->middlew
 Route::post('/post/add/ad/{id}', [PostController::class,'storeAd'])->middleware('jwt.postmiddleware');
 Route::post('/post/add/multiple/{id}', [PostController::class,'storeMultiple'])->middleware('jwt.postmiddleware');
 
-Route::get('/post/get', [PostController::class,'allPost'])->middleware('IpCheckAndAllow');
+Route::get('/post/get/{country}/{state}/{city}/{category}', [PostController::class,'allPost'])->middleware('IpCheckAndAllow');
 
