@@ -12,7 +12,7 @@ class Post extends Model
     protected $dateFormat = 'Y-m-d H:i:s';
    
     protected $fillable=[
-        'country','state','city','service',
+        'country','state','city','service','tag',
         'category','title','description','email',
         'phone','age','images'
     ];

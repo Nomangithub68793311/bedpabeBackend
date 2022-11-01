@@ -50,7 +50,6 @@ class PostController extends Controller
     public function storeFree(Request $request,$id)
     {
 
-        // return  response()->json(["success"=> $request->file('file')]);
 
         $input = $request->only(
             'country','state','city','service','tag',
@@ -59,7 +58,7 @@ class PostController extends Controller
             
       );   
   
-        // return  response()->json(["success"=> $request->file('file')]);
+        // return  response()->json(["success"=> $input]);
 
     
 
@@ -86,8 +85,9 @@ class PostController extends Controller
 
     }
     
-    $input['images']  = $request->file('file')->store('products');
-
+    // $input['images']  = $request->file('file')->store('products');
+    // $post = Post::create($input);
+    //     return  response()->json(["success"=> $post]);
 
         try {
             DB::beginTransaction();
