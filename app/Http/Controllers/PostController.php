@@ -35,9 +35,11 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function dashboard($id)
     {
-      
+        $account=Account::find($id)->posts;
+        return  response()->json(["success"=> $account]);
+
 
     }
 
