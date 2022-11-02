@@ -13,6 +13,7 @@ Route::post('/post/add/renew/{id}', [PostController::class,'renew'])->middleware
 
 
 
-Route::get('/post/get/dashboard/{id}', [PostController::class,'dashboard'])->middleware('jwt.postmiddleware');
+Route::get('/posts/get/{id}', [PostController::class,'allData'])->middleware('jwt.postmiddleware');
 
 
+ 

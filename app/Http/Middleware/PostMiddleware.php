@@ -17,6 +17,8 @@ class PostMiddleware
     
         public function handle(Request $request, Closure $next)
         {
+            // return response()->json(['error' => 'id needed']);
+
             try {
                 $id= $request->id;
                 if(!$id){
