@@ -23,12 +23,7 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function allPost($country,$state,$city,$category,)
-    {
-        $id="de191b40-f46e-450c-b5a2-20926c9b4ae0";
-        $post = Post::find($id);
-        return  response()->json(["success"=>$post->images]);
-    }
+   
 
     /**
      * Show the form for creating a new resource.

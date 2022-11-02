@@ -15,5 +15,4 @@ Route::post('/post/add/renew/{id}', [PostController::class,'renew'])->middleware
 
 Route::get('/post/get/dashboard/{id}', [PostController::class,'dashboard'])->middleware('jwt.postmiddleware');
 
-Route::get('/post/get/{country}/{state}/{city}/{category}', [PostController::class,'allPost'])->middleware('IpCheckAndAllow');
 
