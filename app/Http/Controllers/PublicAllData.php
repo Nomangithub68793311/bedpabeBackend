@@ -18,7 +18,7 @@ use JWTFactory;
 
 class PublicAllData extends Controller
 {
-    public function allPost($city,$service,$category)
+    public function allPost($city,$category)
 
     {
         // return  response()->json(["success"=>$country]);
