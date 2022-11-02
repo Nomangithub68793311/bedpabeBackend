@@ -25,7 +25,6 @@ class PublicAllData extends Controller
 
         $id="de191b40-f46e-450c-b5a2-20926c9b4ae0";
         $post = Post::where('city','=',$city)
-        ->where('service','=',$service)
         ->where('category','=',$category)
         ->get();
         return  response()->json(["success"=>$post]);
