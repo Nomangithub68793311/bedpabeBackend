@@ -43,6 +43,7 @@ class AccountController extends Controller
         return "error";
 
     }
+    
 
     /**
      * Show the form for creating a new resource.
