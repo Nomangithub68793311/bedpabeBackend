@@ -46,7 +46,18 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return  Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            // return Limit::perMinute(3)->response(function(){
+            //     return response('Too much request', 429);
+            //  }); 
         });
+        // https://myiotlab.in/post/laravel-8-advanced-4-laravel-api-rate-limit-using-throttle
+        // RateLimiter::for('posts', function (Request $request) {
+        //     return Limit::perMinute(5)->by(optional($request->user())->id ?: $request->ip())->response(function () {
+        //         return response(['messsage' => 'You have reached your access limit (Posts). Please try after 1 minute.'], 429);
+        //     });;
+        // });
+
+
     }
 }

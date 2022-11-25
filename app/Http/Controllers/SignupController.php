@@ -13,7 +13,13 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\JWTManager as JWT;
 use JWTAuth;
 use JWTFactory;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SignupMail;
 use Illuminate\Support\Facades\DB;
+// use Egulias\EmailValidator\EmailValidator;
+// use Egulias\EmailValidator\Validation\DNSCheckValidation;
+// use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+// use Egulias\EmailValidator\Validation\RFCValidation;
 class SignupController extends Controller
 {
     /**
@@ -21,9 +27,10 @@ class SignupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function verifyEmail($id)
+
     {
-        //
+        
     }
 
     /**
@@ -54,7 +61,7 @@ class SignupController extends Controller
         $validator = Validator::make($input, [
             'name' => 'required',
 
-            'email' => 'required',
+            'email' => 'required|regex:/(.+)@(.+)\.(.+)/i',
 
             'password' => 'required',
 
@@ -65,6 +72,16 @@ class SignupController extends Controller
             return response()->json(["error"=>'fails this time'],422);
 
         }
+    //     $validator = new EmailValidator();
+    // $multipleValidations = new MultipleValidationWithAnd([
+    // new RFCValidation(),
+    // new DNSCheckValidation()
+    //        ]);
+    //      $status=  $validator->isValid($input['email'], $multipleValidations);
+    //      if(!$status){
+    //         return response()->json(['success'=>false, 'message' => 'Email invalidates'],422);
+
+    //      }
 
         $matchThese = ['email' => $request->email];
       

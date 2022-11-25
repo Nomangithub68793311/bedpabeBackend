@@ -94,7 +94,7 @@ class PostController extends Controller
 
             $account=Account::find($id);
             
-            $post = Post::create($input); // eloquent creation of data
+            $post = Post::create($input); 
             $account->posts()->save($post);
             $post->save();
             
@@ -230,34 +230,41 @@ class PostController extends Controller
 
     }
     
-    $input['images']  = $request->file('file')->store('products');
 
 
         try {
             DB::beginTransaction();
-            $school=Post::find($id);
+
+            foreach ($request->city as $city) {
+                $input['city']=$city;
+                $account=Account::find($id);
             
-            $student = Student::create($input); // eloquent creation of data
-            $school->student()->save($student);
-            $student->save();
+                $post = Post::create($input); 
+                $account->posts()->save($post);
+                $post->save();
+                if (!$post) {
+                    return response()->json(["error"=>"didnt work"],422);
+                } 
+              
+            }
+           
             
-            if (!$student) {
-                return response()->json(["error"=>"didnt work"],422);
-            } 
+            
+            
             // $response = Http::post('http://127.0.0.1:8000/v1/event', [
             //     "email"=>$student->email
                 
             // ]);
-            if($request->totalBill)
-            {
-            $account->credit=$account->credit-$request->totalBill ;
-            $account->save();
-             }
+            // if($request->totalBill)
+            // {
+            // $account->credit=$account->credit-$request->totalBill ;
+            // $account->save();
+            //  }
             DB::commit();   
             // $job=(new StudentEmailJob( $student->email,$student->password, $school->institution_name,$school->logo,))
             // ->delay(Carbon::now()->addSeconds(5));
             // dispatch( $job);
-            return  response()->json(["success"=>"true"]);
+            return  response()->json(["success"=>"Ad posted successfullyy"]);
         }
             catch (\Exception $e) {
             DB::rollback();  

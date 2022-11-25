@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Jobs\SignupEmailJob;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +14,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\JWTManager as JWT;
 use JWTAuth;
 use JWTFactory;
+use Redirect;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SignupMail;
 class AccountController extends Controller
 {
     /**
@@ -21,9 +24,24 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function verifyEmail($id)
     {
-        //
+        $matchThese = ['id' => $id];
+        $found_account=Account::where($matchThese)->first();
+       
+
+        
+        if( $found_account){
+
+            if($found_account->verified){
+                return Redirect::to('https://bedpage.vercel.app/user-signin');
+            }
+            $found_account->verified=true;
+            $found_account->save();
+            return Redirect::to('https://bedpage.vercel.app/user-signin');
+        }
+        return "error";
+
     }
 
     /**
@@ -31,9 +49,10 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function check()
     {
-        //
+        return response()->json(["yes"=>'got it']);
+
     }
 
     /**
@@ -53,13 +72,13 @@ class AccountController extends Controller
 
        $validator = Validator::make($input, [
            'name' => 'required',
-           'email' => 'required',
+           'email' => 'required|regex:/(.+)@(.+)\.(.+)/i',
            'password' => 'required|min:8'
            
        ]);
 
        if($validator->fails()){
-           return response()->json(["error"=>'fails']);
+           return response()->json(["error"=>'fails'],422);
 
        }
       
@@ -83,8 +102,8 @@ class AccountController extends Controller
 
        try {
            DB::beginTransaction();
-           $user =Account::create($input); // eloquent creation of data
-           if (!$user) {
+           $account =Account::create($input); // eloquent creation of data
+           if (!$account) {
                return response()->json(["error"=>"didnt work"],422);
            }
            // $response = Http::post('http://127.0.0.1:8000/v1/event', [
@@ -92,11 +111,11 @@ class AccountController extends Controller
                
            // ]);
         //    DB::commit();   
-        //    $job=(new StudentEmailJob( $student->email,$student->password, $school->institution_name,$school->logo,))
-        //    ->delay(Carbon::now()->addSeconds(5));
-        //    dispatch( $job);
+           $job=(new SignupEmailJob($account->email,$account->id))
+           ->delay(Carbon::now()->addSeconds(5));
+           dispatch( $job);
            DB::commit();  
-        return  response()->json(["success"=>"true"]);
+        return  response()->json(["success"=>"Please Verify The Link Sent to Your Email"]);
        }
        catch (\Exception $e) {
            DB::rollback();
@@ -141,6 +160,14 @@ class AccountController extends Controller
             return response()->json(["error"=>'Email not found'],422);
     
         }
+        if(!$account->verified){
+            $job=(new SignupEmailJob($account->email,$account->id))
+            ->delay(Carbon::now()->addSeconds(5));
+            dispatch( $job);
+            return  response()->json(["success"=>"Not verified! Please Click The Link Sent to Your Email"]);
+
+        }
+       
        
            
                // $date1 = Carbon::parse($found->payment_date);

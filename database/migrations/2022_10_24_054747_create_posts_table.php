@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('email');
             $table->string('phone');
+            $table->integer('views')->nullable();
             $table->string('tag');
             $table->integer('age');
             $table->json('images');

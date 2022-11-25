@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('password');
             $table->integer('credit')->nullable();
+            $table->boolean('verified')->default(false); 
             $table->string('hashedPassword');
             $table->timestamps();
         });
